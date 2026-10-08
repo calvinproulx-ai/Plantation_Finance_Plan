@@ -368,6 +368,25 @@
   table.align td.n { color: var(--ink-soft); }
   table.align .sub { display: block; font-size: 11px; color: var(--ink-faint); margin-top: 3px; }
 
+  .toolbar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; margin:0 0 18px; }
+  .seg { display:inline-flex; border:1px solid var(--hairline-strong); border-radius:999px; padding:3px; background:var(--surface); }
+  .seg-btn { font:inherit; font-size:13px; font-weight:600; color:var(--ink-soft); background:transparent; border:0; border-radius:999px; padding:7px 14px; cursor:pointer; }
+  .seg-btn[aria-pressed="true"] { background:var(--accent); color:var(--surface); }
+  .seg-btn:focus-visible, .dept-pick select:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  .dept-pick { display:inline-flex; align-items:center; gap:8px; font-size:12.5px; color:var(--ink-soft); }
+  .dept-pick select { font:inherit; font-size:13px; color:var(--ink); background:var(--surface); border:1px solid var(--hairline-strong); border-radius:8px; padding:7px 10px; }
+  .dept-view { display:flex; flex-direction:column; gap:22px; }
+  .dept { border:1px solid var(--hairline); border-radius:var(--radius); background:color-mix(in srgb, var(--surface) 55%, transparent); padding:4px 16px 16px; }
+  .dept > summary { list-style:none; cursor:pointer; display:flex; align-items:baseline; justify-content:space-between; gap:12px; padding:14px 0 12px; border-bottom:2px solid var(--accent); margin-bottom:14px; }
+  .dept > summary::-webkit-details-marker { display:none; }
+  .dept > summary h2 { font-family: Georgia, "Times New Roman", serif; font-weight:500; font-size:20px; color:var(--accent); margin:0; }
+  .dept .tally { font-family:"SFMono-Regular", Consolas, Menlo, monospace; font-size:12px; color:var(--ink-soft); white-space:nowrap; }
+  .dept:not([open]) > summary { margin-bottom:0; }
+  .dept-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:12px; }
+  .dept h4 { font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--solved); margin:18px 0 10px; font-weight:600; }
+  .dept-empty { font-size:12.8px; color:var(--ink-soft); font-style:italic; }
+  @media (max-width: 640px) { .kpis { grid-template-columns: repeat(2, 1fr); } .wrap { padding: 28px 16px 56px; } }
+
   footer {
     margin-top: 44px;
     padding-top: 16px;
@@ -401,10 +420,28 @@
     <span class="item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--progress)" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 3.5"/></svg><b>In progress</b> — scope is set, being built</span>
     <span class="item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--open)" stroke-width="2.4"><path d="M12 3 2 21h20L12 3Z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="0.6" fill="var(--open)"/></svg><b>Open</b> — needs a decision or a solution</span>
     <span class="item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--solved)" stroke-width="2.4"><path d="M12 3 4 6v6c0 4.5 3.4 7.7 8 9 4.6-1.3 8-4.5 8-9V6l-8-3Z"/><path d="M9 12.3 11.3 14.6 15.5 9.8"/></svg><b>Completed</b> — already resolved / in use</span>
-    <span class="item" style="margin-left:auto; color:var(--ink-faint); font-style:italic;">Click a column header to expand or collapse it</span>
+    <span class="item hint" style="margin-left:auto; color:var(--ink-faint); font-style:italic;">Click a section header to expand or collapse it</span>
   </div>
 
-  <div class="board">
+  <div class="toolbar" role="group" aria-label="Board view">
+    <div class="seg" role="tablist">
+      <button type="button" class="seg-btn" data-view="dept" aria-pressed="true">By department</button>
+      <button type="button" class="seg-btn" data-view="status" aria-pressed="false">By status</button>
+    </div>
+    <label class="dept-pick">Department
+      <select id="deptFilter">
+        <option value="all">All departments</option>
+        <option value="A/R">A/R — Member Billing</option>
+        <option value="A/P">A/P — Vendor Payables</option>
+        <option value="CONTROLLER">Controller</option>
+        <option value="CFO">CFO</option>
+      </select>
+    </label>
+  </div>
+
+  <div id="deptView" class="dept-view"></div>
+
+  <div class="board" id="statusView">
 
     <!-- COMPLETED -->
     <details class="column" style="--col-color:var(--solved)">
@@ -864,8 +901,48 @@
   </div>
 
   <footer>SOURCE — Calvin's dictated initiative lists, 23 Aug 2026, updated through 6 Oct 2026 · cross-referenced against ar-ap-controller-initiatives-tracker.md and finance-systems-staffing-modernization-plan.md</footer>
-  <div class="synced" style="margin-top:8px;font-size:11px;color:var(--ink-faint);font-family:monospace">Synced from the Claude artifact Oct 8, 2026 9:31 AM ET</div>
+  <div class="synced" style="margin-top:8px;font-size:11px;color:var(--ink-faint);font-family:monospace">Synced from the Claude artifact Oct 8, 2026 12:46 PM ET</div>
 
 </div>
+<script>
+(function(){
+  var DEPTS=[['A/R','A/R Initiatives (Member Billing)'],['A/P','A/P Initiatives (Vendor Payables)'],['CONTROLLER','Controller Initiatives'],['CFO','CFO Initiatives']];
+  var statusView=document.getElementById('statusView'), deptView=document.getElementById('deptView'), sel=document.getElementById('deptFilter');
+  var cards=[].slice.call(statusView.querySelectorAll('.card'));
+  function info(c){ var t=(c.querySelector('.tag')||{}).textContent||''; var parts=t.split('·'); var d=parts[0].trim(); var n=parts[1]?parseInt(parts[1],10):null;
+    var done=!!c.querySelector('.pill.solved'); return {dept:d,num:n,done:done,open:!!c.querySelector('.pill.open')}; }
+  cards.forEach(function(c){ var i=info(c); c.dataset.dept=i.dept; c.dataset.done=i.done?'1':'0'; c.dataset.num=i.num||''; c.dataset.open=i.open?'1':'0'; });
+  DEPTS.forEach(function(d){
+    var mine=cards.filter(function(c){return c.dataset.dept===d[0];});
+    var active=mine.filter(function(c){return c.dataset.done==='0';}).sort(function(a,b){return (+a.dataset.num||99)-(+b.dataset.num||99);});
+    var done=mine.filter(function(c){return c.dataset.done==='1';});
+    var sec=document.createElement('details'); sec.className='dept'; sec.open=true; sec.dataset.dept=d[0];
+    sec.innerHTML='<summary><h2>'+d[1]+'</h2><span class="tally">'+active.length+' active · '+done.length+' completed</span></summary>';
+    var g=document.createElement('div'); g.className='dept-grid';
+    if(!active.length){ var e=document.createElement('p'); e.className='dept-empty'; e.textContent='No active items.'; sec.appendChild(e); }
+    active.forEach(function(c){ g.appendChild(c.cloneNode(true)); }); sec.appendChild(g);
+    if(done.length){ var h=document.createElement('h4'); h.textContent='Completed'; sec.appendChild(h); var g2=document.createElement('div'); g2.className='dept-grid'; done.forEach(function(c){ g2.appendChild(c.cloneNode(true)); }); sec.appendChild(g2); }
+    deptView.appendChild(sec);
+  });
+  var kp=[].slice.call(document.querySelectorAll('.kpi .num'));
+  function apply(){
+    var dep=sel.value, view=document.querySelector('.seg-btn[aria-pressed="true"]').dataset.view;
+    deptView.hidden=view!=='dept'; statusView.hidden=view!=='status';
+    [].slice.call(deptView.children).forEach(function(s){ s.hidden=!(dep==='all'||s.dataset.dept===dep); });
+    cards.forEach(function(c){ c.hidden=!(dep==='all'||c.dataset.dept===dep); });
+    [].slice.call(statusView.querySelectorAll('details.column')).forEach(function(col){
+      var n=[].slice.call(col.querySelectorAll('.card')).filter(function(c){return !c.hidden;}).length; var ct=col.querySelector('.count'); if(ct) ct.textContent=n; });
+    var vis=cards.filter(function(c){return !c.hidden;});
+    var comp=vis.filter(function(c){return c.dataset.done==='1';}).length, open=vis.filter(function(c){return c.dataset.open==='1';}).length;
+    if(kp.length===4){ kp[0].textContent=comp; kp[2].textContent=vis.length-comp-open; kp[3].textContent=open; }
+    try{ localStorage.setItem('pfb-view', JSON.stringify({view:view,dep:dep})); }catch(e){}
+  }
+  [].slice.call(document.querySelectorAll('.seg-btn')).forEach(function(b){ b.addEventListener('click',function(){
+    document.querySelectorAll('.seg-btn').forEach(function(x){x.setAttribute('aria-pressed', x===b?'true':'false');}); apply(); }); });
+  sel.addEventListener('change',apply);
+  try{ var s=JSON.parse(localStorage.getItem('pfb-view')||'null'); if(s){ if(s.dep) sel.value=s.dep; if(s.view){ document.querySelectorAll('.seg-btn').forEach(function(x){x.setAttribute('aria-pressed', x.dataset.view===s.view?'true':'false');}); } } }catch(e){}
+  apply();
+})();
+</script>
 </body>
 </html>
