@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<title>Plantation Finance Board</title>
+<style>
+  :root {
+    --paper: #F6F3EC;
+    --surface: #FDFBF6;
+    --surface-2: #FFFFFF;
+    --ink: #202A37;
+    --ink-soft: #6E6658;
+    --ink-faint: #8B8474;
+    --hairline: #DDD6C9;
+    --hairline-strong: #C9C0AE;
+    --accent: #1F3B57;
+    --accent-soft: rgba(31,59,87,0.08);
+
+    --ready: #1B7F4C;
+    --ready-bg: rgba(27,127,76,0.10);
+    --progress: #C77D00;
+    --progress-bg: rgba(199,125,0,0.11);
+    --open: #B23A2E;
+    --open-bg: rgba(178,58,46,0.10);
+    --solved: #2166AC;
+    --solved-bg: rgba(33,102,172,0.10);
+
+    --shadow: 0 1px 2px rgba(32,42,55,0.06), 0 4px 14px rgba(32,42,55,0.05);
+    --radius: 10px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #12181F;
+      --surface: #1A222C;
+      --surface-2: #1F2833;
+      --ink: #E8E6DE;
+      --ink-soft: #9B9284;
+      --ink-faint: #767065;
+      --hairline: #2A323D;
+      --hairline-strong: #384250;
+      --accent: #8FB2D6;
+      --accent-soft: rgba(143,178,214,0.12);
+
+      --ready: #2E9C63;
+      --ready-bg: rgba(46,156,99,0.16);
+      --progress: #D19A2E;
+      --progress-bg: rgba(209,154,46,0.16);
+      --open: #C93C46;
+      --open-bg: rgba(201,60,70,0.16);
+      --solved: #3D7FC9;
+      --solved-bg: rgba(61,127,201,0.18);
+
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #12181F;
+    --surface: #1A222C;
+    --surface-2: #1F2833;
+    --ink: #E8E6DE;
+    --ink-soft: #9B9284;
+    --ink-faint: #767065;
+    --hairline: #2A323D;
+    --hairline-strong: #384250;
+    --accent: #8FB2D6;
+    --accent-soft: rgba(143,178,214,0.12);
+
+    --ready: #2E9C63;
+    --ready-bg: rgba(46,156,99,0.16);
+    --progress: #D19A2E;
+    --progress-bg: rgba(209,154,46,0.16);
+    --open: #C93C46;
+    --open-bg: rgba(201,60,70,0.16);
+    --solved: #3D7FC9;
+    --solved-bg: rgba(61,127,201,0.18);
+
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "tnum" 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+
+  .wrap {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 40px 28px 72px;
+  }
+
+  /* ---- Header ---- */
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+    border-bottom: 1px solid var(--hairline);
+    padding-bottom: 22px;
+    margin-bottom: 28px;
+  }
+  h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 500;
+    font-size: clamp(28px, 4vw, 38px);
+    letter-spacing: -0.01em;
+    color: var(--accent);
+    margin: 0 0 6px;
+    text-wrap: balance;
+  }
+  .subtitle {
+    color: var(--ink-soft);
+    font-size: 15px;
+    max-width: 62ch;
+    margin: 0;
+  }
+  .meta {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    text-align: right;
+    line-height: 1.6;
+  }
+
+  /* ---- KPI strip ---- */
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .kpi {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: var(--shadow);
+  }
+  .kpi .dot {
+    width: 11px; height: 11px; border-radius: 50%;
+    flex: none;
+  }
+  .kpi .num {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1;
+  }
+  .kpi .lbl {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    letter-spacing: 0.02em;
+  }
+
+  /* ---- Legend ---- */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    align-items: center;
+    padding: 10px 4px 26px;
+    color: var(--ink-soft);
+    font-size: 12.5px;
+    border-bottom: 1px dashed var(--hairline-strong);
+    margin-bottom: 26px;
+  }
+  .legend .item { display: flex; align-items: center; gap: 6px; }
+  .legend svg { width: 13px; height: 13px; flex: none; }
+  .legend b { color: var(--ink); font-weight: 600; }
+
+  /* ---- Board ---- */
+  .board {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(240px, 1fr));
+    gap: 18px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+  @media (max-width: 880px) {
+    .board { grid-template-columns: 1fr; }
+  }
+  .column-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 2px 2px 12px;
+    border-bottom: 2px solid var(--col-color, var(--accent));
+    margin-bottom: 14px;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+  .column-head::-webkit-details-marker { display: none; }
+  .column-head::marker { content: ""; }
+  .column-head:hover h2 { color: var(--col-color, var(--accent)); }
+  .column-head h2 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+    color: var(--ink);
+    transition: color .12s ease;
+  }
+  .column-head .head-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .column-head .count {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  .column-head .chev {
+    width: 13px;
+    height: 13px;
+    flex: none;
+    color: var(--ink-faint);
+    transition: transform .15s ease;
+  }
+  details.column[open] > .column-head .chev { transform: rotate(180deg); }
+  .column { min-width: 0; }
+  .column[open] .cards { margin-top: 0; }
+  .column:not([open]) { padding-bottom: 2px; }
+  .cards { display: flex; flex-direction: column; gap: 12px; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    padding: 14px 15px 13px;
+    box-shadow: var(--shadow);
+  }
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 7px;
+  }
+  .tag {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+    color: var(--ink-faint);
+    border: 1px solid var(--hairline-strong);
+    border-radius: 4px;
+    padding: 2px 6px;
+    white-space: nowrap;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    padding: 3px 8px 3px 6px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .pill svg { width: 12px; height: 12px; }
+  .pill.ready   { color: var(--ready);    background: var(--ready-bg); }
+  .pill.progress{ color: var(--progress); background: var(--progress-bg); }
+  .pill.open    { color: var(--open);     background: var(--open-bg); }
+  .pill.solved  { color: var(--solved);   background: var(--solved-bg); }
+
+  .card h3 {
+    font-size: 14.5px;
+    font-weight: 600;
+    margin: 0 0 5px;
+    line-height: 1.3;
+  }
+  .card p {
+    font-size: 12.8px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin: 0 0 8px;
+  }
+  .card .maps {
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    border-top: 1px solid var(--hairline);
+    padding-top: 7px;
+    margin-top: 2px;
+  }
+  .card .maps b { color: var(--ink-soft); font-weight: 600; }
+  .card .linked {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11.5px;
+    color: var(--accent);
+    margin: 0 0 8px;
+  }
+  .card .linked svg { width: 12px; height: 12px; flex: none; }
+
+  /* ---- Gap panel ---- */
+  .gap-section { margin-top: 40px; }
+  .gap-section h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 500;
+    font-size: 20px;
+    color: var(--accent);
+    margin: 0 0 4px;
+  }
+  .gap-section > p.lead {
+    color: var(--ink-soft);
+    font-size: 13.5px;
+    max-width: 72ch;
+    margin: 0 0 16px;
+  }
+  .gap-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px;
+    border: 1.5px dashed var(--hairline-strong);
+    border-radius: var(--radius);
+    padding: 16px;
+    background: color-mix(in srgb, var(--surface) 60%, transparent);
+  }
+  .gap-item {
+    padding: 4px 8px;
+  }
+  .gap-item .name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 3px;
+  }
+  .gap-item .note {
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.45;
+  }
+  .out-of-scope {
+    margin-top: 14px;
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    font-style: italic;
+  }
+
+  .pill.muted { color: var(--ink-faint); background: var(--accent-soft); }
+  .align-wrap { overflow-x: auto; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow); }
+  table.align { width: 100%; border-collapse: collapse; font-size: 12.8px; min-width: 640px; }
+  table.align th { text-align: left; font-size: 11.5px; letter-spacing: .03em; text-transform: uppercase; color: var(--ink-soft); font-weight: 600; padding: 10px 12px; border-bottom: 1px solid var(--hairline-strong); }
+  table.align td { padding: 9px 12px; border-top: 1px solid var(--hairline); vertical-align: top; line-height: 1.45; }
+  table.align td.g { font-weight: 600; color: var(--ink); }
+  table.align td.c { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; font-size: 11.5px; color: var(--ink-soft); }
+  table.align td.n { color: var(--ink-soft); }
+  table.align .sub { display: block; font-size: 11px; color: var(--ink-faint); margin-top: 3px; }
+
+  footer {
+    margin-top: 44px;
+    padding-top: 16px;
+    border-top: 1px solid var(--hairline);
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <h1>Plantation Finance Board</h1>
+      <p class="subtitle">A/R, A/P, Controller &amp; CFO initiatives, sorted by where each one actually stands — cross-referenced against Mark's (GM/COO) finance goal sheet.</p>
+    </div>
+    <div class="meta">The Plantation PV<br>Prepared 23 Aug 2026<br>Updated 6 Oct 2026</div>
+  </header>
+
+  <div class="kpis">
+    <div class="kpi"><span class="dot" style="background:var(--solved)"></span><span class="num">19</span><span class="lbl">Completed</span></div>
+    <div class="kpi"><span class="dot" style="background:var(--ready)"></span><span class="num">0</span><span class="lbl">Ready to execute</span></div>
+    <div class="kpi"><span class="dot" style="background:var(--progress)"></span><span class="num">20</span><span class="lbl">In progress</span></div>
+    <div class="kpi"><span class="dot" style="background:var(--open)"></span><span class="num">0</span><span class="lbl">Needs scoping</span></div>
+  </div>
+
+  <div class="legend">
+    <span class="item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--ready)" stroke-width="2.4"><path d="M4 12.5 9 18 20 6"/></svg><b>Ready</b> — just execute</span>
+    <span class="item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--progress)" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 3.5"/></svg><b>In progress</b> — scope is set, being built</span>
+    <span class="item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--open)" stroke-width="2.4"><path d="M12 3 2 21h20L12 3Z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="0.6" fill="var(--open)"/></svg><b>Open</b> — needs a decision or a solution</span>
+    <span class="item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--solved)" stroke-width="2.4"><path d="M12 3 4 6v6c0 4.5 3.4 7.7 8 9 4.6-1.3 8-4.5 8-9V6l-8-3Z"/><path d="M9 12.3 11.3 14.6 15.5 9.8"/></svg><b>Completed</b> — already resolved / in use</span>
+    <span class="item" style="margin-left:auto; color:var(--ink-faint); font-style:italic;">Click a column header to expand or collapse it</span>
+  </div>
+
+  <div class="board">
+
+    <!-- COMPLETED -->
+    <details class="column" style="--col-color:var(--solved)">
+      <summary class="column-head"><h2>Completed</h2><span class="head-right"><span class="count">19</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></span></summary>
+      <div class="cards">
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">A/R</span>
+            <span class="pill solved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3 4 6v6c0 4.5 3.4 7.7 8 9 4.6-1.3 8-4.5 8-9V6l-8-3Z"/><path d="M9 12.3 11.3 14.6 15.5 9.8"/></svg>Completed</span>
+          </div>
+          <h3>Dates on invoices</h3>
+          <p>Invoice line items don't state which billing period a charge covers. Done — took far more work than expected.</p>
+          <div class="maps"><b>Maps to:</b> Member Billing Improvements</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">A/P</span>
+            <span class="pill solved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3 4 6v6c0 4.5 3.4 7.7 8 9 4.6-1.3 8-4.5 8-9V6l-8-3Z"/><path d="M9 12.3 11.3 14.6 15.5 9.8"/></svg>Completed</span>
+          </div>
+          <h3>Single intake system</h3>
+          <p>Vendor invoices used to arrive via email, mail, and portals with no central point of consolidation. Go-live 9/1/26 — dedicated inbox and manager document set in use.</p>
+          <div class="maps"><b>Maps to:</b> Accounting Electronic Payments</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">A/P</span>
+            <span class="pill solved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3 4 6v6c0 4.5 3.4 7.7 8 9 4.6-1.3 8-4.5 8-9V6l-8-3Z"/><path d="M9 12.3 11.3 14.6 15.5 9.8"/></svg>Completed</span>
+          </div>
+          <h3>Payments out of Jonas</h3>
+          <p>Vendor payments now run directly out of Jonas; the Treasury Navigator file-import hurdle has been resolved.</p>
+          <div class="maps"><b>Maps to:</b> Accounting Electronic Payments · Tier 1</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">A/P</span>
+            <span class="pill solved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3 4 6v6c0 4.5 3.4 7.7 8 9 4.6-1.3 8-4.5 8-9V6l-8-3Z"/><path d="M9 12.3 11.3 14.6 15.5 9.8"/></svg>Completed</span>
+          </div>
+          <h3>AP entry backlog</h3>
+          <p>Backlog cleared and confirmed fully current as of the 9/10/26 target. The single-intake process (completed) is designed to keep it from recurring.</p>
+          <div class="maps"><b>Maps to:</b> underscores the case for AP automation + staffing</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">A/P</span>
+            <span class="pill solved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3 4 6v6c0 4.5 3.4 7.7 8 9 4.6-1.3 8-4.5 8-9V6l-8-3Z"/><path d="M9 12.3 11.3 14.6 15.5 9.8"/></svg>Completed</span>
+          </div>
+          <h3>Private contractors (1099s)</h3>
+          <p>1099 processing moved to Bamboo and filed electronically to the Controller for coding.</p>
+          <div class="maps"><b>Maps to:</b> not on Mark's list — same Bamboo→Controller pipeline as the AI-assisted JEs</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">A/P</span>
+            <span class="pill solved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3 4 6v6c0 4.5 3.4 7.7 8 9 4.6-1.3 8-4.5 8-9V6l-8-3Z"/><path d="M9 12.3 11.3 14.6 15.5 9.8"/></svg>Completed</span>
+          </div>
+          <h3>Vendor letters</h3>
+          <p>Letters sent to all vendors requesting updated statements, confirmation of account information, and ACH payment data. Completed.</p>
+          <div class="maps"><b>Maps to:</b> not on Mark's list — owned directly by A/P</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">CONTROLLER</span>
+            <span class="pill solved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3 4 6v6c0 4.5 3.4 7.7 8 9 4.6-1.3 8-4.5 8-9V6l-8-3Z"/><path d="M9 12.3 11.3 14.6 15.5 9.8"/></svg>Completed</span>
+          </div>
+          <h3>AI-assisted JEs (Bamboo payroll → Jonas)</h3>
+          <p>BambooHR's payroll GL export isn't Jonas-friendly. A conversion tool already exists and can be run any time an export needs converting. Done, already in use.</p>
+          <div class="maps"><b>Maps to:</b> Payroll Processing Improvements</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">CONTROLLER</span>
+            <span class="pill solved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3 4 6v6c0 4.5 3.4 7.7 8 9 4.6-1.3 8-4.5 8-9V6l-8-3Z"/><path d="M9 12.3 11.3 14.6 15.5 9.8"/></svg>Completed</span>
+          </div>
+          <h3>Expense reporting via Bill.com</h3>
+          <p>Completed — Comerica-card entry/JE replaced by Bill.com; cardholders self-enter, export streamlines JE creation.</p>
+          <div class="maps"><b>Maps to:</b> Department P-cards</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">CONTROLLER</span>
+            <span class="pill solved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3 4 6v6c0 4.5 3.4 7.7 8 9 4.6-1.3 8-4.5 8-9V6l-8-3Z"/><path d="M9 12.3 11.3 14.6 15.5 9.8"/></svg>Completed</span>
+          </div>
+          <h3>Month-end close / JE checklist</h3>
+          <p>Root cause fixed — a monthly close-accrual ritual had stopped after May. Catch-up entries processed; checklist/ritual back in place and in use.</p>
+          <div class="maps"><b>Maps to:</b> not on Mark's list</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">CONTROLLER</span>
+            <span class="pill solved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3 4 6v6c0 4.5 3.4 7.7 8 9 4.6-1.3 8-4.5 8-9V6l-8-3Z"/><path d="M9 12.3 11.3 14.6 15.5 9.8"/></svg>Completed</span>
+          </div>
+          <h3>Amazon Business account for purchases</h3>
+          <p>Account set up for company purchases — centralized purchasing plus itemized receipts/statements — and in use.</p>
+          <div class="maps"><b>Maps to:</b> not on Mark's list</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">CONTROLLER</span>
+            <span class="pill solved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3 4 6v6c0 4.5 3.4 7.7 8 9 4.6-1.3 8-4.5 8-9V6l-8-3Z"/><path d="M9 12.3 11.3 14.6 15.5 9.8"/></svg>Completed</span>
+          </div>
+          <h3>Jonas automation for adjusting entries</h3>
+          <p>Identified and turned on — certain Jonas features now automatically push adjusting journal entries instead of requiring manual entry.</p>
+          <div class="maps"><b>Maps to:</b> not on Mark's list — same theme as the AI-assisted JEs</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">CFO</span>
+            <span class="pill solved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3 4 6v6c0 4.5 3.4 7.7 8 9 4.6-1.3 8-4.5 8-9V6l-8-3Z"/><path d="M9 12.3 11.3 14.6 15.5 9.8"/></svg>Completed</span>
+          </div>
+          <h3>File for service/gratuity charges for Bamboo</h3>
+          <p>Service charge / gratuity information for Bamboo (payroll) filed.</p>
+          <div class="maps"><b>Maps to:</b> not on Mark's list</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">CFO</span>
+            <span class="pill solved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3 4 6v6c0 4.5 3.4 7.7 8 9 4.6-1.3 8-4.5 8-9V6l-8-3Z"/><path d="M9 12.3 11.3 14.6 15.5 9.8"/></svg>Completed</span>
+          </div>
+          <h3>Depreciation adjustments and CapEx</h3>
+          <p>Depreciation adjustments and capital expenditure (CapEx) coding/tracking reviewed and trued up.</p>
+          <div class="maps"><b>Maps to:</b> not on Mark's list</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">CFO</span>
+            <span class="pill solved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3 4 6v6c0 4.5 3.4 7.7 8 9 4.6-1.3 8-4.5 8-9V6l-8-3Z"/><path d="M9 12.3 11.3 14.6 15.5 9.8"/></svg>Completed</span>
+          </div>
+          <h3>Tie cash flow statements to prior schedules</h3>
+          <p>Cash flow statements reconciled to prior period schedules for consistency and audit support.</p>
+          <div class="maps"><b>Maps to:</b> not on Mark's list</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">CFO</span>
+            <span class="pill solved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3 4 6v6c0 4.5 3.4 7.7 8 9 4.6-1.3 8-4.5 8-9V6l-8-3Z"/><path d="M9 12.3 11.3 14.6 15.5 9.8"/></svg>Completed</span>
+          </div>
+          <h3>KPI report tied to monthly finance package</h3>
+          <p>Built and incorporated into the monthly finance package delivered to the Finance Committee.</p>
+          <div class="maps"><b>Maps to:</b> not on Mark's list</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">CFO</span>
+            <span class="pill solved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3 4 6v6c0 4.5 3.4 7.7 8 9 4.6-1.3 8-4.5 8-9V6l-8-3Z"/><path d="M9 12.3 11.3 14.6 15.5 9.8"/></svg>Completed</span>
+          </div>
+          <h3>Cash projections and cash flow waterfall chart</h3>
+          <p>Forward-looking cash projections and a cash flow waterfall chart, built and delivered for Finance Committee/board use.</p>
+          <div class="maps"><b>Maps to:</b> not on Mark's list</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">CFO</span>
+            <span class="pill solved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3 4 6v6c0 4.5 3.4 7.7 8 9 4.6-1.3 8-4.5 8-9V6l-8-3Z"/><path d="M9 12.3 11.3 14.6 15.5 9.8"/></svg>Completed</span>
+          </div>
+          <h3>LRCA Financials into Jonas</h3>
+          <p>LRCA's financials are now consolidated into Jonas rather than tracked as a separate memo/schedule.</p>
+          <div class="maps"><b>Maps to:</b> Mark's goal sheet — direct match; Tier 2 of the modernization plan</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">CFO</span>
+            <span class="pill solved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3 4 6v6c0 4.5 3.4 7.7 8 9 4.6-1.3 8-4.5 8-9V6l-8-3Z"/><path d="M9 12.3 11.3 14.6 15.5 9.8"/></svg>Completed</span>
+          </div>
+          <h3>F&amp;B Alcohol Inventory Reduction</h3>
+          <p>Alcohol inventory reduction project from Mark's goal sheet. Owned operationally by F&amp;B, not the CFO.</p>
+          <div class="maps"><b>Maps to:</b> Mark's goal sheet — direct match</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">CFO</span>
+            <span class="pill solved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3 4 6v6c0 4.5 3.4 7.7 8 9 4.6-1.3 8-4.5 8-9V6l-8-3Z"/><path d="M9 12.3 11.3 14.6 15.5 9.8"/></svg>Completed</span>
+          </div>
+          <h3>F&amp;B/Golf Inventory Procedures &amp; Reduction</h3>
+          <p>Inventory procedures and reduction project spanning F&amp;B and Golf. Owned operationally by F&amp;B/Golf, not the CFO; longer-term ties to A/P·2 (Beanworks / EDI feeding into inventory management).</p>
+          <div class="maps"><b>Maps to:</b> Mark's goal sheet — direct match</div>
+        </div>
+
+      </div>
+    </details>
+
+    <!-- READY -->
+    <details class="column" style="--col-color:var(--ready)">
+      <summary class="column-head"><h2>Ready to Execute</h2><span class="head-right"><span class="count">0</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></span></summary>
+      <div class="cards">
+
+        <p style="font-size:12.8px; color:var(--ink-soft); font-style:italic; margin:0; padding:2px 2px;">Nothing here right now — the one previously-ready item (the member billing due-date change) is now folded into A/R·2, Member billing changes, tracked as In Progress.</p>
+
+      </div>
+    </details>
+
+    <!-- IN PROGRESS -->
+    <details class="column" style="--col-color:var(--progress)" open>
+      <summary class="column-head"><h2>In Progress</h2><span class="head-right"><span class="count">20</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></span></summary>
+      <div class="cards">
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">A/R · 1</span>
+            <span class="pill progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 3.5"/></svg>Defined</span>
+          </div>
+          <h3>Member processing internal to Jonas</h3>
+          <p>Route ACH/check/bill-pay through Jonas natively; Jonas remits to the operating account (possibly split).</p>
+          <div class="maps"><b>Maps to:</b> Member Billing Improvements · Tier 1</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">A/R · 2</span>
+            <span class="pill progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 3.5"/></svg>In progress</span>
+          </div>
+          <h3>Member billing changes</h3>
+          <p>Consolidated from three former A/R items: (a) shifting member charges from arrears to prepaid, including the one-time transition month that carries two payments; (b) rolling a smaller fixed fee into the larger fixed-fee line; (c) moving the bill due date to the 1st. The due-date change is policy-decided and ready to communicate; the prepaid-transition notation and fee consolidation still need to be built.</p>
+          <div class="maps"><b>Maps to:</b> Member Billing Improvements</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">A/R · 3</span>
+            <span class="pill progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 3.5"/></svg>In progress</span>
+          </div>
+          <h3>Chit access for Fitness Center</h3>
+          <p>Give Fitness Center staff the ability to post member chits directly in Jonas at time of service. Sent to Caitlin for build/scoping — awaiting her update.</p>
+          <div class="maps"><b>Maps to:</b> not on Mark's list — reasonable add-on</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">A/R · 4</span>
+            <span class="pill progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 3.5"/></svg>In progress</span>
+          </div>
+          <h3>Credit cards inside Jonas</h3>
+          <p>Clover is separate from Jonas today, requiring a nightly manual JE to reconcile card batches to POS activity. Build underway toward native card processing in Jonas.</p>
+          <div class="maps"><b>Maps to:</b> Credit Card Processing · Tier 1</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">A/R · 5</span>
+            <span class="pill progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 3.5"/></svg>In progress</span>
+          </div>
+          <h3>Bank switch: Wells Fargo → SouthState</h3>
+          <p>Letters have been mailed — now monitoring member conversion to SouthState.</p>
+          <div class="maps"><b>Maps to:</b> Cash Management / Bank Reconciliations</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">A/P · 1</span>
+            <span class="pill progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 3.5"/></svg>In progress</span>
+          </div>
+          <h3>Bank transition</h3>
+          <p>Build-out of the items needed to complete the SouthState bank transition on the A/P side: a new Bank Profile in Jonas, a Nacha profile for electronic payment files, and check stock/setup for printing.</p>
+          <div class="maps"><b>Maps to:</b> not on Mark's list — owned directly by A/P; supports the Wells Fargo → SouthState bank transition (A/R · 5)</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">A/P · 2</span>
+            <span class="pill progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 3.5"/></svg>In progress</span>
+          </div>
+          <h3>Beanworks AP module rollout</h3>
+          <p>Consolidated with the former electronic invoice storage and EDI (highest-volume vendors, Sysco first) items — one rollout covers imaging, storage and electronic invoicing.</p>
+          <div class="maps"><b>Maps to:</b> Purchasing Consolidation · AP automation</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">A/P · 3</span>
+            <span class="pill progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 3.5"/></svg>In progress</span>
+          </div>
+          <h3>Asset Panda — asset management</h3>
+          <p>A/P takes on an additional asset-management role, maintaining the club's asset records in Asset Panda. Target: November 2026.</p>
+          <div class="maps"><b>Maps to:</b> part of the Asset Panda initiative with Controller·4 and CFO·6</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">CONTROLLER · 1</span>
+            <span class="pill progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 3.5"/></svg>In progress</span>
+          </div>
+          <h3>GL cleanup</h3>
+          <p>Inconsistent GL usage across departments, plus a set of unused/dormant accounts cluttering the chart.</p>
+          <div class="maps"><b>Maps to:</b> not on Mark's list — reporting hygiene</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">CONTROLLER · 2</span>
+            <span class="pill progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 3.5"/></svg>In progress</span>
+          </div>
+          <h3>Bank consolidation</h3>
+          <p>Reduce the number of bank accounts/relationships held.</p>
+          <div class="maps"><b>Maps to:</b> Cash Management / Bank Reconciliations · Tier 3</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">CONTROLLER · 3</span>
+            <span class="pill progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 3.5"/></svg>In progress</span>
+          </div>
+          <h3>Bank / cash reconciliations (2026)</h3>
+          <p>Darrell is working part-time — 15 hrs/week for 6 weeks — completing recs through May 2026, then June/July.</p>
+          <div class="maps"><b>Maps to:</b> Cash Management / Bank Reconciliations</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">CONTROLLER · 4</span>
+            <span class="pill progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 3.5"/></svg>In progress</span>
+          </div>
+          <h3>Asset Panda — License &amp; Permit tracking</h3>
+          <p>Combined with License renewals: the club's required licenses and permits, including renewal dates, tracked in Asset Panda. Target: November 2026.</p>
+          <div class="maps"><b>Maps to:</b> part of the Asset Panda initiative with A/P·3 and CFO·6</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">CFO · 1</span>
+            <span class="pill progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 3.5"/></svg>Defined</span>
+          </div>
+          <h3>RFP on Major Accounts</h3>
+          <p>RFP process on the club's major accounts/vendor relationships. Needs ~60 days lead time — targeting an October 2026 start.</p>
+          <div class="maps"><b>Maps to:</b> owned directly by the CFO</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">CFO · 2</span>
+            <span class="pill progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 3.5"/></svg>In progress</span>
+          </div>
+          <h3>Dreaux Isaac Reserve Study (Capital Budget &amp; Management)</h3>
+          <p>Consolidated — the Dreaux Isaac reserve study itself is the club's forward-looking capital budget planning and capital spend tracking work, so carrying a separate "Capital Budget &amp; Management" line was redundant. Owned directly by the CFO, no longer tied to the paused Coordinator-hire dependency.</p>
+          <div class="maps"><b>Maps to:</b> Mark's finance calendar — direct match (merged in)</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">CFO · 3</span>
+            <span class="pill progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 3.5"/></svg>In progress</span>
+          </div>
+          <h3>Insurance</h3>
+          <p>Review underway of the club's insurance coverage and renewals — which policies, renewal dates, and broker are involved.</p>
+          <div class="maps"><b>Maps to:</b> not on Mark's list</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">CFO · 4</span>
+            <span class="pill progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 3.5"/></svg>In progress</span>
+          </div>
+          <h3>External Audit</h3>
+          <p>Coordinate the club's annual external audit — engagement now underway with the audit firm; assembling supporting schedules.</p>
+          <div class="maps"><b>Maps to:</b> Mark's finance calendar — direct match</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">CFO · 5</span>
+            <span class="pill progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 3.5"/></svg>In progress</span>
+          </div>
+          <h3>Taxes</h3>
+          <p>Coordinate the club's annual tax filings with the outside preparer — Calvin has connected with the tax group; coordination underway.</p>
+          <div class="maps"><b>Maps to:</b> Mark's finance calendar — direct match</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">CFO · 6</span>
+            <span class="pill progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 3.5"/></svg>In progress</span>
+          </div>
+          <h3>Asset Panda / ClubBenchmarking — Overall Management</h3>
+          <p>Overall management of the club-wide Asset Panda initiative — A/P asset management (A/P·3) and Controller license &amp; permit tracking (Controller·4), target Nov 2026 — alongside ClubBenchmarking reporting. Users added and target date set.</p>
+          <div class="maps"><b>Maps to:</b> Mark's goal sheet — direct match; Tier 1</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">CFO · 7</span>
+            <span class="pill progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 3.5"/></svg>In progress</span>
+          </div>
+          <h3>F&amp;B Daily Tracker</h3>
+          <p>In progress. Next step: a cloud-based Jonas system to allow for higher-end reporting. Owned operationally by F&amp;B, not the CFO.</p>
+          <div class="maps"><b>Maps to:</b> Mark's goal sheet — direct match</div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <span class="tag">CFO · 8</span>
+            <span class="pill progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 3.5"/></svg>In progress</span>
+          </div>
+          <h3>Daily Flash Report</h3>
+          <p>In progress. Next step: a cloud-based Jonas system to allow for higher-end reporting. Owned operationally by F&amp;B/operations, not the CFO.</p>
+          <div class="maps"><b>Maps to:</b> Mark's goal sheet — direct match</div>
+        </div>
+
+      </div>
+    </details>
+
+    <!-- OPEN -->
+    <details class="column" style="--col-color:var(--open)" open>
+      <summary class="column-head"><h2>Needs Scoping</h2><span class="head-right"><span class="count">0</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></span></summary>
+      <div class="cards">
+        <p style="font-size:12.8px; color:var(--ink-soft); font-style:italic; margin:0; padding:2px 2px;">Nothing here right now — Water Management System Priority was removed from the tracker; it is an LRCA item that Calvin manages directly.</p>
+
+      </div>
+    </details>
+
+  </div>
+
+  <div class="gap-section">
+    <h2>Mark's Goal Alignment</h2>
+    <p class="lead">Each item on Mark's goal sheet, the initiative(s) that carry it, and a status rolled up from those initiatives. Codes refer to the numbered cards above; completed items are named.</p>
+    <div class="align-wrap"><table class="align">
+      <thead><tr><th>Mark's goal sheet item</th><th>Initiative(s)</th><th>Status</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td class="g">Member Billing Improvements</td><td class="c">A/R·1, A/R·2, A/R·3; Dates on invoices</td><td><span class="pill progress">In progress</span> <span class="sub">1 of 4 complete</span></td><td class="n">Dates on invoices done; member processing in Jonas defined; prepaid/fee/due-date changes and chit access in progress</td></tr>
+        <tr><td class="g">Credit Card Processing</td><td class="c">A/R·4</td><td><span class="pill progress">In progress</span></td><td class="n">Native Jonas card processing, replacing the Clover/manual-JE workaround</td></tr>
+        <tr><td class="g">Department P-cards</td><td class="c">Expense reporting via Bill.com</td><td><span class="pill solved">Completed</span></td><td class="n">Bill.com rollout for Comerica card expenses complete</td></tr>
+        <tr><td class="g">Payroll Processing Improvements</td><td class="c">AI-assisted JEs; Jonas adjusting-entry automation</td><td><span class="pill solved">Completed</span></td><td class="n">Bamboo→Jonas JE conversion in use; adjusting entries now automated</td></tr>
+        <tr><td class="g">Accounting Electronic Payments</td><td class="c">Single intake; Payments out of Jonas; A/P·1; A/P·2</td><td><span class="pill progress">In progress</span> <span class="sub">2 of 4 complete</span></td><td class="n">Single intake and payments out of Jonas done; SouthState bank transition and Beanworks rollout in progress</td></tr>
+        <tr><td class="g">Purchasing Consolidation</td><td class="c">A/P·2</td><td><span class="pill progress">In progress</span></td><td class="n">EDI for highest-volume vendors (Sysco first) now part of the Beanworks AP rollout</td></tr>
+        <tr><td class="g">Cash Management</td><td class="c">A/R·5, CTRL·2</td><td><span class="pill progress">In progress</span></td><td class="n">Wells Fargo → SouthState member conversion being monitored; bank-count reduction in progress</td></tr>
+        <tr><td class="g">Bank Reconciliations</td><td class="c">CTRL·3</td><td><span class="pill progress">In progress</span></td><td class="n">Darrell completing 2026 recs through May, then June/July</td></tr>
+        <tr><td class="g">Asset Panda Reporting / Maintenance Tracking</td><td class="c">CFO·6, A/P·3, CTRL·4</td><td><span class="pill progress">In progress</span></td><td class="n">Asset Panda rollout (target Nov 2026) plus ClubBenchmarking; users added, target date set</td></tr>
+        <tr><td class="g">License Renewals</td><td class="c">CTRL·4</td><td><span class="pill progress">In progress</span></td><td class="n">Combined into Asset Panda license &amp; permit tracking (target Nov 2026)</td></tr>
+        <tr><td class="g">Dreaux Isaac Reserve Study (Capital Budget &amp; Management)</td><td class="c">CFO·2</td><td><span class="pill progress">In progress</span></td><td class="n">Reserve study is the vehicle for capital budget planning; underway</td></tr>
+        <tr><td class="g">RFP on Major Accounts</td><td class="c">CFO·1</td><td><span class="pill progress">Defined</span></td><td class="n">~60-day lead time, targeting an October 2026 start</td></tr>
+        <tr><td class="g">Annual Budget</td><td class="c">Outside the tracker</td><td><span class="pill progress">In progress</span></td><td class="n">Running via the 2027 budget model</td></tr>
+        <tr><td class="g">External Audit</td><td class="c">CFO·4</td><td><span class="pill progress">In progress</span></td><td class="n">Engagement underway with the audit firm; assembling schedules</td></tr>
+        <tr><td class="g">Taxes</td><td class="c">CFO·5</td><td><span class="pill progress">In progress</span></td><td class="n">Calvin has connected with the tax group</td></tr>
+        <tr><td class="g">LRCA Financials into Jonas</td><td class="c">LRCA Financials into Jonas</td><td><span class="pill solved">Completed</span></td><td class="n">LRCA's financials now consolidated into Jonas</td></tr>
+        <tr><td class="g">F&amp;B Daily Tracker</td><td class="c">CFO·7</td><td><span class="pill progress">In progress</span></td><td class="n">Next step: cloud-based Jonas system for higher-end reporting; owned by F&amp;B</td></tr>
+        <tr><td class="g">Daily Flash Report</td><td class="c">CFO·8</td><td><span class="pill progress">In progress</span></td><td class="n">Next step: cloud-based Jonas system for higher-end reporting; owned by F&amp;B/operations</td></tr>
+        <tr><td class="g">F&amp;B Alcohol Inventory Reduction</td><td class="c">F&amp;B Alcohol Inventory Reduction</td><td><span class="pill solved">Completed</span></td><td class="n">Owned operationally by F&amp;B</td></tr>
+        <tr><td class="g">F&amp;B/Golf Inventory Procedures &amp; Reduction</td><td class="c">F&amp;B/Golf Inventory Procedures &amp; Reduction</td><td><span class="pill solved">Completed</span></td><td class="n">Owned operationally by F&amp;B/Golf</td></tr>
+        <tr><td class="g">Water Management System Priority</td><td class="c">—</td><td><span class="pill muted">Removed</span></td><td class="n">LRCA item, managed directly by Calvin</td></tr>
+        <tr><td class="g">Mid Year Forecast</td><td class="c">—</td><td><span class="pill muted">Dropped</span></td><td class="n">Not produced this cycle — the mid-year window has passed</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <footer>SOURCE — Calvin's dictated initiative lists, 23 Aug 2026, updated through 6 Oct 2026 · cross-referenced against ar-ap-controller-initiatives-tracker.md and finance-systems-staffing-modernization-plan.md</footer>
+  <div class="synced" style="margin-top:8px;font-size:11px;color:var(--ink-faint);font-family:monospace">Synced from the Claude artifact Oct 8, 2026 9:31 AM ET</div>
+
+</div>
+</body>
+</html>
