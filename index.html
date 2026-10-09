@@ -388,6 +388,31 @@
   .dept-empty { font-size:12.8px; color:var(--ink-soft); font-style:italic; }
   @media (max-width: 640px) { .kpis { grid-template-columns: repeat(2, 1fr); } .wrap { padding: 28px 16px 56px; } }
 
+  .rocks { margin: 0 0 30px; }
+  .rocks-head { display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 16px; margin-bottom:14px; }
+  .rocks-head h2 { font-family: Georgia, "Times New Roman", serif; font-weight:500; font-size:24px; color:var(--accent); margin:0; }
+  .rocks-head p { margin:0; color:var(--ink-soft); font-size:13.5px; }
+  .rock-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:14px; }
+  .rock { background:var(--surface); border:1px solid var(--hairline); border-top:3px solid var(--accent); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow); display:flex; flex-direction:column; }
+  .rk-head { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+  .rk-num { flex:none; width:26px; height:26px; border-radius:50%; background:var(--accent); color:var(--surface); font:600 13px/26px "SFMono-Regular", Consolas, Menlo, monospace; text-align:center; }
+  .rk-head h3 { margin:0; font-size:16px; line-height:1.25; }
+  .rk-target { margin:0 0 12px; font-size:12.8px; color:var(--ink-soft); line-height:1.45; }
+  .rk-bar { height:6px; border-radius:999px; background:var(--accent-soft); overflow:hidden; }
+  .rk-bar span { display:block; height:100%; width:0; background:var(--solved); border-radius:999px; }
+  .rk-tally { margin:6px 0 10px; font:12px "SFMono-Regular", Consolas, Menlo, monospace; color:var(--ink-soft); }
+  .rk-read { margin:0 0 12px; font-size:12.8px; line-height:1.45; color:var(--ink); padding:8px 10px; background:var(--accent-soft); border-radius:6px; }
+  .rk-list { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:5px; }
+  .rk-item { display:flex; align-items:baseline; gap:7px; font-size:12.5px; color:var(--ink); }
+  .rk-dot { flex:none; width:8px; height:8px; border-radius:50%; background:var(--ink-faint); transform:translateY(-1px); }
+  .rk-item.s-done .rk-dot { background:var(--solved); }
+  .rk-item.s-done .rk-name { color:var(--ink-soft); }
+  .rk-item.s-prog .rk-dot { background:var(--progress); }
+  .rk-item.s-open .rk-dot { background:var(--open); }
+  .rk-item.rk-next { font-style:italic; color:var(--ink-soft); }
+  .rk-item.rk-next .rk-dot { background:transparent; border:1.5px dashed var(--ink-faint); }
+  .rk-code { flex:none; font:10.5px "SFMono-Regular", Consolas, Menlo, monospace; color:var(--ink-faint); min-width:0; }
+
   footer {
     margin-top: 44px;
     padding-top: 16px;
@@ -406,8 +431,39 @@
       <h1>Plantation Finance Board</h1>
       <p class="subtitle">A/R, A/P, Controller &amp; CFO initiatives, sorted by where each one actually stands — cross-referenced against Mark's (GM/COO) finance goal sheet.</p>
     </div>
-    <div class="meta">The Plantation PV<br>Prepared 23 Aug 2026<br>Updated 6 Oct 2026</div>
+    <div class="meta">The Plantation PV<br>Prepared 23 Aug 2026<br>Updated 9 Oct 2026</div>
   </header>
+
+
+  <section class="rocks" aria-labelledby="rocks-h">
+    <div class="rocks-head"><h2 id="rocks-h">Big Rocks</h2><p>The Accounting Department's three overall goals. Every initiative below rolls up to one or more of them.</p></div>
+    <div class="rock-grid">
+      <article class="rock">
+        <div class="rk-head"><span class="rk-num">1</span><h3>Financial prelims by the 8th</h3></div>
+        <p class="rk-target">Preliminary financials out by the 8th of each following month.</p>
+        <div class="rk-bar" aria-hidden="true"><span></span></div>
+        <p class="rk-tally"></p>
+        <p class="rk-read">September prelims built and verified Oct 8 — on target. August v1 landed Sep 25.</p>
+        <ul class="rk-list"><li class="rk-item" data-title="Month-end close / JE checklist"><span class="rk-dot"></span><span class="rk-code"></span><span class="rk-name">Month-end close / JE checklist</span></li><li class="rk-item" data-title="AP entry backlog"><span class="rk-dot"></span><span class="rk-code"></span><span class="rk-name">AP entry backlog</span></li><li class="rk-item" data-title="AI-assisted JEs (Bamboo payroll → Jonas)"><span class="rk-dot"></span><span class="rk-code"></span><span class="rk-name">AI-assisted JEs (Bamboo payroll → Jonas)</span></li><li class="rk-item" data-title="Jonas automation for adjusting entries"><span class="rk-dot"></span><span class="rk-code"></span><span class="rk-name">Jonas automation for adjusting entries</span></li><li class="rk-item" data-title="Bank / cash reconciliations (2026)"><span class="rk-dot"></span><span class="rk-code"></span><span class="rk-name">Bank / cash reconciliations (2026)</span></li><li class="rk-item" data-title="GL cleanup"><span class="rk-dot"></span><span class="rk-code"></span><span class="rk-name">GL cleanup</span></li></ul>
+      </article>
+      <article class="rock">
+        <div class="rk-head"><span class="rk-num">2</span><h3>Process &amp; technology improvement</h3></div>
+        <p class="rk-target">Asset Panda, Jonas and its third-party modules, and the systems that take manual work out of the close.</p>
+        <div class="rk-bar" aria-hidden="true"><span></span></div>
+        <p class="rk-tally"></p>
+        <p class="rk-read">Asset Panda rollout targeted for Nov 2026; Beanworks and Jonas card processing in progress.</p>
+        <ul class="rk-list"><li class="rk-item" data-title="Asset Panda — asset management"><span class="rk-dot"></span><span class="rk-code"></span><span class="rk-name">Asset Panda — asset management</span></li><li class="rk-item" data-title="Asset Panda — License &amp; Permit tracking"><span class="rk-dot"></span><span class="rk-code"></span><span class="rk-name">Asset Panda — License &amp; Permit tracking</span></li><li class="rk-item" data-title="Asset Panda / ClubBenchmarking — Overall Management"><span class="rk-dot"></span><span class="rk-code"></span><span class="rk-name">Asset Panda / ClubBenchmarking — Overall Management</span></li><li class="rk-item" data-title="Beanworks AP module rollout"><span class="rk-dot"></span><span class="rk-code"></span><span class="rk-name">Beanworks AP module rollout</span></li><li class="rk-item" data-title="Credit cards inside Jonas"><span class="rk-dot"></span><span class="rk-code"></span><span class="rk-name">Credit cards inside Jonas</span></li><li class="rk-item" data-title="Member processing internal to Jonas"><span class="rk-dot"></span><span class="rk-code"></span><span class="rk-name">Member processing internal to Jonas</span></li><li class="rk-item" data-title="Bank transition"><span class="rk-dot"></span><span class="rk-code"></span><span class="rk-name">Bank transition</span></li><li class="rk-item" data-title="Single intake system"><span class="rk-dot"></span><span class="rk-code"></span><span class="rk-name">Single intake system</span></li><li class="rk-item" data-title="Payments out of Jonas"><span class="rk-dot"></span><span class="rk-code"></span><span class="rk-name">Payments out of Jonas</span></li><li class="rk-item" data-title="Expense reporting via Bill.com"><span class="rk-dot"></span><span class="rk-code"></span><span class="rk-name">Expense reporting via Bill.com</span></li><li class="rk-item" data-title="Amazon Business account for purchases"><span class="rk-dot"></span><span class="rk-code"></span><span class="rk-name">Amazon Business account for purchases</span></li><li class="rk-item" data-title="LRCA Financials into Jonas"><span class="rk-dot"></span><span class="rk-code"></span><span class="rk-name">LRCA Financials into Jonas</span></li><li class="rk-item rk-next"><span class="rk-dot"></span><span class="rk-name">Next: cloud-based Jonas for higher-end reporting</span></li></ul>
+      </article>
+      <article class="rock">
+        <div class="rk-head"><span class="rk-num">3</span><h3>Department function recalibration</h3></div>
+        <p class="rk-target">Re-set who owns what across A/P, Controller and CFO so each role carries the right work.</p>
+        <div class="rk-bar" aria-hidden="true"><span></span></div>
+        <p class="rk-tally"></p>
+        <p class="rk-read">Under way through role shifts: A/P takes on asset management, license &amp; permit tracking moves to Controller, the CFO owns RFP, insurance, audit and taxes directly.</p>
+        <ul class="rk-list"><li class="rk-item" data-title="Asset Panda — asset management"><span class="rk-dot"></span><span class="rk-code"></span><span class="rk-name">Asset Panda — asset management</span></li><li class="rk-item" data-title="Asset Panda — License &amp; Permit tracking"><span class="rk-dot"></span><span class="rk-code"></span><span class="rk-name">Asset Panda — License &amp; Permit tracking</span></li><li class="rk-item" data-title="Bank / cash reconciliations (2026)"><span class="rk-dot"></span><span class="rk-code"></span><span class="rk-name">Bank / cash reconciliations (2026)</span></li><li class="rk-item" data-title="Private contractors (1099s)"><span class="rk-dot"></span><span class="rk-code"></span><span class="rk-name">Private contractors (1099s)</span></li><li class="rk-item" data-title="RFP on Major Accounts"><span class="rk-dot"></span><span class="rk-code"></span><span class="rk-name">RFP on Major Accounts</span></li><li class="rk-item" data-title="Insurance"><span class="rk-dot"></span><span class="rk-code"></span><span class="rk-name">Insurance</span></li><li class="rk-item" data-title="External Audit"><span class="rk-dot"></span><span class="rk-code"></span><span class="rk-name">External Audit</span></li><li class="rk-item" data-title="Taxes"><span class="rk-dot"></span><span class="rk-code"></span><span class="rk-name">Taxes</span></li></ul>
+      </article>
+    </div>
+  </section>
 
   <div class="kpis">
     <div class="kpi"><span class="dot" style="background:var(--solved)"></span><span class="num">19</span><span class="lbl">Completed</span></div>
@@ -902,7 +958,7 @@
   </div>
 
   <footer>SOURCE — Calvin's dictated initiative lists, 23 Aug 2026, updated through 6 Oct 2026 · cross-referenced against ar-ap-controller-initiatives-tracker.md and finance-systems-staffing-modernization-plan.md</footer>
-  <div class="synced" style="margin-top:8px;font-size:11px;color:var(--ink-faint);font-family:monospace">Synced from the Claude artifact Oct 8, 2026 2:15 PM ET</div>
+  <div class="synced" style="margin-top:8px;font-size:11px;color:var(--ink-faint);font-family:monospace">Synced from the Claude artifact Oct 9, 2026 9:32 AM ET</div>
 
 </div>
 <script>
@@ -943,6 +999,28 @@
   sel.addEventListener('change',apply);
   try{ var s=JSON.parse(localStorage.getItem('pfb-view')||'null'); if(s){ if(s.dep) sel.value=s.dep; if(s.view){ document.querySelectorAll('.seg-btn').forEach(function(x){x.setAttribute('aria-pressed', x.dataset.view===s.view?'true':'false');}); } } }catch(e){}
   apply();
+})();
+</script>
+<script>
+(function(){
+  var byTitle={};
+  [].slice.call(document.querySelectorAll('#statusView .card')).forEach(function(c){
+    var t=(c.querySelector('h3')||{}).textContent||''; var tag=(c.querySelector('.tag')||{}).textContent||'';
+    var st=c.querySelector('.pill.solved')?'done':(c.querySelector('.pill.open')?'open':'prog');
+    byTitle[t.trim()]={st:st,tag:tag.trim()};
+  });
+  [].slice.call(document.querySelectorAll('.rock')).forEach(function(r){
+    var items=[].slice.call(r.querySelectorAll('.rk-item[data-title]')), done=0, n=0;
+    items.forEach(function(li){ var i=byTitle[li.getAttribute('data-title')]; if(!i) return; n++;
+      li.classList.add('s-'+i.st); if(i.st==='done') done++;
+      var code=li.querySelector('.rk-code'); code.textContent=/\d/.test(i.tag)?i.tag.replace('CONTROLLER','CTRL'):'✓';
+    });
+    items.sort(function(a,b){ var o={'s-prog':0,'s-open':1,'s-done':2}; function k(x){for(var c in o) if(x.classList.contains(c)) return o[c]; return 3;} return k(a)-k(b); });
+    var ul=r.querySelector('.rk-list'), nexts=[].slice.call(ul.querySelectorAll('.rk-next'));
+    items.forEach(function(li){ ul.appendChild(li); }); nexts.forEach(function(li){ ul.insertBefore(li, ul.querySelector('.s-done')); });
+    r.querySelector('.rk-bar span').style.width=(n?Math.round(done/n*100):0)+'%';
+    r.querySelector('.rk-tally').textContent=done+' of '+n+' linked initiatives complete';
+  });
 })();
 </script>
 </body>
